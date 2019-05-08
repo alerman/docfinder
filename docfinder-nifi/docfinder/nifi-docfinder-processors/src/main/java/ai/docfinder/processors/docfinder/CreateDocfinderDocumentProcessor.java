@@ -16,6 +16,10 @@
  */
 package ai.docfinder.processors.docfinder;
 
+import ai.docfinder.document.DocfinderDocument;
+import ai.docfinder.document.DocumentDetail;
+import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.annotation.behavior.ReadsAttribute;
@@ -32,8 +36,11 @@ import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
-import org.apache.nifi.processor.util.StandardValidators;
+import org.apache.nifi.processor.io.InputStreamCallback;
+import org.apache.nifi.processor.io.OutputStreamCallback;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,17 +54,17 @@ import java.util.Set;
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
 
-//    public static final PropertyDescriptor MY_PROPERTY = new PropertyDescriptor
-//            .Builder().name("MY_PROPERTY")
-//            .displayName("My property")
-//            .description("Example Property")
-//            .required(true)
-//            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
-//            .build();
-
     public static final Relationship SUCCESS = new Relationship.Builder()
             .name("success")
-            .description("Successful Creation of DocfinderDocument")
+            .description("Successful creation of DocfinderDocument")
+            .build();
+    public static final Relationship ORIGINAL = new Relationship.Builder()
+            .name("original")
+            .description("The original document")
+            .build();
+    public static final Relationship FAILURE = new Relationship.Builder()
+            .name("failure")
+            .description("Failure in  creation of DocfinderDocument")
             .build();
 
     private List<PropertyDescriptor> descriptors;
@@ -67,11 +74,12 @@ public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
     @Override
     protected void init(final ProcessorInitializationContext context) {
         final List<PropertyDescriptor> descriptors = new ArrayList<PropertyDescriptor>();
-//        descriptors.add(MY_PROPERTY);
         this.descriptors = Collections.unmodifiableList(descriptors);
 
         final Set<Relationship> relationships = new HashSet<Relationship>();
         relationships.add(SUCCESS);
+        relationships.add(FAILURE);
+        relationships.add(ORIGINAL);
         this.relationships = Collections.unmodifiableSet(relationships);
     }
 
@@ -97,8 +105,38 @@ public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
             return;
         }
 
-        //Step 1: Create Content
-        //Step 2: Create Metadata
-        //Step 3: Transfer Success
+        DocfinderDocument finderDocument = new DocfinderDocument();
+
+        finderDocument.setFileReceivedTime(flowFile.getEntryDate());
+        String decompressedFilenameAttribute = "segment.original.filename";
+        if(flowFile.getAttributes().containsKey(decompressedFilenameAttribute))
+        {
+            finderDocument.setOriginalFileName(flowFile.getAttribute(decompressedFilenameAttribute));
+        }else
+        {
+            finderDocument.setOriginalFileName(flowFile.getAttribute("filename"));
+        }
+
+        DocumentDetail finderDetail = new DocumentDetail();
+        finderDetail.setTitle(finderDocument.getOriginalFileName());
+        finderDocument.setDocumentText(finderDetail);
+
+        session.read(flowFile, in -> {
+            try{
+                String content = IOUtils.toString(in);
+                finderDetail.setContent(content);
+            }catch(Exception ex){
+                ex.printStackTrace();
+                getLogger().error("Failed to read json string.");
+                session.transfer(flowFile, FAILURE);
+            }
+        });
+
+        FlowFile newFlowFile = session.write(flowFile, (OutputStreamCallback) out -> {
+            out.write(new Gson().toJson(finderDocument).getBytes());
+        });
+        session.transfer(newFlowFile, SUCCESS);
+
+//        session.transfer(flowFile, ORIGINAL);
     }
 }
