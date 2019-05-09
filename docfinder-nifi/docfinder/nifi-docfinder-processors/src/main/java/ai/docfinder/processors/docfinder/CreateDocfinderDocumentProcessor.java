@@ -39,6 +39,7 @@ import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.processor.io.OutputStreamCallback;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -58,10 +59,6 @@ public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
             .name("success")
             .description("Successful creation of DocfinderDocument")
             .build();
-    public static final Relationship ORIGINAL = new Relationship.Builder()
-            .name("original")
-            .description("The original document")
-            .build();
     public static final Relationship FAILURE = new Relationship.Builder()
             .name("failure")
             .description("Failure in  creation of DocfinderDocument")
@@ -79,7 +76,6 @@ public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
         final Set<Relationship> relationships = new HashSet<Relationship>();
         relationships.add(SUCCESS);
         relationships.add(FAILURE);
-        relationships.add(ORIGINAL);
         this.relationships = Collections.unmodifiableSet(relationships);
     }
 
@@ -109,13 +105,15 @@ public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
 
         finderDocument.setFileReceivedTime(flowFile.getEntryDate());
         String decompressedFilenameAttribute = "segment.original.filename";
-        if(flowFile.getAttributes().containsKey(decompressedFilenameAttribute))
-        {
-            finderDocument.setOriginalFileName(flowFile.getAttribute(decompressedFilenameAttribute));
-        }else
-        {
-            finderDocument.setOriginalFileName(flowFile.getAttribute("filename"));
+        if(flowFile.getAttributes().containsKey(decompressedFilenameAttribute)) {
+            finderDocument.setSourceFileName(flowFile.getAttribute(decompressedFilenameAttribute));
         }
+        finderDocument.setOriginalFileName(flowFile.getAttribute("filename"));
+
+
+        String originalFilePath = flowFile.getAttribute("absolute.path");
+
+        finderDocument.setOriginalFilePath(originalFilePath);
 
         DocumentDetail finderDetail = new DocumentDetail();
         finderDetail.setTitle(finderDocument.getOriginalFileName());
@@ -137,6 +135,5 @@ public class CreateDocfinderDocumentProcessor extends AbstractProcessor {
         });
         session.transfer(newFlowFile, SUCCESS);
 
-//        session.transfer(flowFile, ORIGINAL);
     }
 }

@@ -1,7 +1,6 @@
 package ai.docfinder.document;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class DocfinderDocument implements Serializable {
     private String originalFileName;
@@ -12,6 +11,8 @@ public class DocfinderDocument implements Serializable {
     private long documentMetadataVersion = 1L;
 
     private DocumentDetail documentText;
+    private String originalFilePath;
+    private String sourceFileName;
 
     public String getOriginalFileName() {
         return originalFileName;
@@ -43,5 +44,21 @@ public class DocfinderDocument implements Serializable {
 
     public void setDocumentText(DocumentDetail documentText) {
         this.documentText = documentText;
+    }
+
+    public void setOriginalFilePath(String originalFilePath) {
+        this.originalFilePath = originalFilePath;
+    }
+
+    public String getOriginalFilePath() {
+        return originalFilePath;
+    }
+
+    public void setSourceFileName(String sourceFileName) {
+        this.sourceFileName = sourceFileName;
+    }
+
+    public String getSourceFileName() {
+        return sourceFileName;
     }
 }

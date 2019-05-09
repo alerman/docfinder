@@ -11,25 +11,19 @@
     <p>Look For: <input type="text" class="form-control" ng-model="srcStr" placeHolder="Enter your search string"/></p>
     <table class="table table-striped">
         <thead style="font-weight: bold;">
-        <td>ID</td>
-        <td>Filename</td>
-        <td>Name</td>
-        <td>Author</td>
-        <td>Genre</td>
-        <td>In-Stock</td>
-        <td>Price</td>
-        <td>Pages</td>
+        <td>Doc Id</td>
+        <td>Recieved Date</td>
+        <td>Original Path</td>
+        <td>File Name</td>
+        <td>Options</td>
         </thead>
         <tbody>
         <tr ng-repeat="doc in allDocuments | searchFilter:srcStr">
             <td>{{doc.id}}</td>
-            <td>{{doc.originalFileName}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{doc.fileReceivedTime[0] | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{doc.originalFilePath[0]}}</td>
+            <td>{{doc.originalFileName[0]}}</td>
+            <td><a href="showDocument.html#?docId={{doc.id}}">View Content</a></td>
         </tr>
         </tbody>
     </table>

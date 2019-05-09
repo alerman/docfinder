@@ -7,7 +7,7 @@ nifi-docfinder-processors
 
 
 From: 'an unknown organization'
-  - docfinder  com.ai:docfinder:pom:1.0-SNAPSHOT
+  - docfinder  com.ai:docfinder:jar:1.0-SNAPSHOT
 
   - Gson (https://github.com/google/gson/gson) com.google.code.gson:gson:jar:2.8.5
     License: Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
