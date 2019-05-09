@@ -16,9 +16,9 @@
  */
 package ai.docfinder.processors.docfinder;
 
-import ai.docfinder.document.DocfinderDocument;
-import ai.docfinder.document.DocumentDetail;
 import com.google.gson.Gson;
+import document.DocfinderDocument;
+import document.DocumentDetail;
 import org.apache.commons.io.IOUtils;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.flowfile.FlowFile;
@@ -36,12 +36,8 @@ import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.ProcessorInitializationContext;
 import org.apache.nifi.processor.Relationship;
-import org.apache.nifi.processor.io.InputStreamCallback;
 import org.apache.nifi.processor.io.OutputStreamCallback;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

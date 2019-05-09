@@ -1,4 +1,4 @@
-package ai.docfinder.document;
+package document;
 
 public class DocumentDetail {
     private String title;

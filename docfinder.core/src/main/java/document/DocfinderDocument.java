@@ -1,4 +1,6 @@
-package ai.docfinder.document;
+package document;
+
+import document.DocumentDetail;
 
 import java.io.Serializable;
 
