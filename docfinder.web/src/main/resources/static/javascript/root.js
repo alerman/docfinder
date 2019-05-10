@@ -5,7 +5,7 @@ angular.module("root", ["filters", "ngResource"])
         function ($scope, $resource, $location) {
             var srchUrl = $resource($location.protocol() + "://" +
                 $location.host() + ":" + 8983 +
-                "/solr/gettingstarted/select?q=documentText_content:*"+$location.search().searchTerm+"*&wt=json&sort=_docid_ desc&rows=500");
+                "/solr/gettingstarted/select?q="+$location.search().searchTerm+"&wt=json&sort=_docid_ desc&rows=500");
             restRes = srchUrl.get(function(data) {
                 $scope.allDocuments = data.response.docs;
             });
