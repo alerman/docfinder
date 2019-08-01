@@ -28,8 +28,6 @@ import org.apache.nifi.annotation.behavior.WritesAttribute;
 import org.apache.nifi.annotation.behavior.WritesAttributes;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
-import org.apache.nifi.annotation.documentation.SeeAlso;
-import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.processor.ProcessContext;
@@ -44,9 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Tags({"example"})
-@CapabilityDescription("Provide a description")
-@SeeAlso({})
+@CapabilityDescription("Parses email files into DocfinderDocuments ")
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
 public class CreateDocfinderDocumentProcessor extends AbstractProcessor {

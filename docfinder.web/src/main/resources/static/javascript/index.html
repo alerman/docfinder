@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocFinder Search</title>
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+</head>
+<body ng-app="root" ng-controller="index">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-resource.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+<script src="filters.js"></script>
+<script src="root.js"></script>
+
+<div layout="column" layout-align="center center">
+<img style="height:400px;width:25%" src="docfinder_logo.png" />
+
+<div layout-align="center" layout="row">
+    <md-input-container>
+        <label>Search Term</label>
+        <input ng-model="searchTerm" type="text" name="searchTerm" id="searchTerm" />
+    </md-input-container>
+<md-button ng-click="search()" class="md-primary md-raised" >Search</md-button>
+</div>
+</div>
+
+</body>
+</html>
